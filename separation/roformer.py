@@ -24,7 +24,7 @@ def load_bs_roformer(config_path: str, checkpoint_path: str, device: torch.devic
         mask_estimator_depth=model_cfg.get("mask_estimator_depth", 2),
     )
 
-    state_dict = torch.load(checkpoint_path, map_location=device, weights_only=True)
+    state_dict = torch.load(checkpoint_path, map_location=device, weights_only=False)
     model.load_state_dict(state_dict)
     model = model.to(device).eval()
     return model
