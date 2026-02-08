@@ -1,0 +1,23 @@
+build:
+  gpu: true
+  cuda: "12.1"
+  python_version: "3.11"
+  system_packages:
+    - "ffmpeg"
+    - "libsndfile1"
+  python_packages:
+    - "torch==2.1.2"
+    - "torchaudio==2.1.2"
+    - "numpy<2"
+    - "librosa==0.10.1"
+    - "soundfile==0.12.1"
+    - "pyyaml==6.0.1"
+    - "einops>=0.7.0"
+    - "bs-roformer==1.1.0"
+    - "rotary-embedding-torch"
+    - "demucs"
+  run:
+    # Download and cache the BS-RoFormer weights at build time
+    - "mkdir -p /src/weights"
+    - "curl -L -o /src/weights/model_bs_roformer_ep_317_sdr_12.9755.ckpt https://huggingface.co/viperx/bs-roformer/resolve/main/model_bs_roformer_ep_317_sdr_12.9755.ckpt"
+predict: "predict.py:Predictor"
