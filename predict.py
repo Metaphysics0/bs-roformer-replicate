@@ -1,3 +1,4 @@
+import logging
 import tempfile
 from typing import List
 from cog import BasePredictor, Input, Path
@@ -6,13 +7,19 @@ from audio_separator.separator import Separator
 MODEL_NAME = "model_bs_roformer_ep_317_sdr_12.9755.ckpt"
 MODEL_DIR = "/src/weights"
 
+log = logging.getLogger("predictor")
+logging.basicConfig(level=logging.INFO)
+
 
 class Predictor(BasePredictor):
 
     def setup(self):
         """Load BS-RoFormer model into GPU."""
+        log.info("setup: creating output dir")
         self.output_dir = tempfile.mkdtemp()
+        log.info("setup: initializing Separator")
         self.separator = Separator(
+            log_level=logging.INFO,
             model_file_dir=MODEL_DIR,
             output_dir=self.output_dir,
             output_format="WAV",
@@ -24,7 +31,9 @@ class Predictor(BasePredictor):
                 "pitch_shift": 0,
             },
         )
+        log.info("setup: loading model %s", MODEL_NAME)
         self.separator.load_model(model_filename=MODEL_NAME)
+        log.info("setup: done")
 
     def predict(
         self,
