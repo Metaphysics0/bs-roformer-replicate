@@ -6,20 +6,9 @@ build:
     - "ffmpeg"
     - "libsndfile1"
   python_packages:
-    - "torch==2.5.1"
-    - "torchaudio==2.5.1"
-    - "numpy<2"
-    - "librosa==0.10.1"
-    - "soundfile==0.12.1"
-    - "pyyaml==6.0.1"
-    - "einops>=0.7.0"
-    - "bs-roformer==1.1.0"
-    - "rotary-embedding-torch"
-    - "julius>=0.2.7"
+    - "audio-separator[gpu]"
   run:
-    # Install demucs without deps to avoid pip resolver conflicts
-    - "pip install --no-deps dora-search diffq demucs==4.0.1"
-    # Download and cache the BS-RoFormer weights at build time
+    # Pre-download BS-RoFormer model weights at build time
     - "mkdir -p /src/weights"
-    - "curl -L -o /src/weights/model_bs_roformer_ep_317_sdr_12.9755.ckpt https://huggingface.co/viperx/bs-roformer/resolve/main/model_bs_roformer_ep_317_sdr_12.9755.ckpt"
+    - "audio-separator --model_filename model_bs_roformer_ep_317_sdr_12.9755.ckpt --model_file_dir /src/weights --download_model_only"
 predict: "predict.py:Predictor"
