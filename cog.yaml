@@ -5,9 +5,10 @@ build:
   system_packages:
     - "ffmpeg"
     - "libsndfile1"
-  python_packages:
-    - "audio-separator[gpu]"
   run:
+    # Install PyTorch with CUDA 12.1 first, then audio-separator on top
+    - "pip install torch==2.5.1 torchaudio==2.5.1 --index-url https://download.pytorch.org/whl/cu121"
+    - "pip install audio-separator[gpu]"
     # Pre-download BS-RoFormer model weights at build time
     - "mkdir -p /src/weights"
     - "audio-separator --model_filename model_bs_roformer_ep_317_sdr_12.9755.ckpt --model_file_dir /src/weights --download_model_only"
